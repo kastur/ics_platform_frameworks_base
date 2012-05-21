@@ -77,6 +77,8 @@ import android.os.RemoteException;
 import android.os.ServiceManager;
 import android.os.Vibrator;
 import android.os.storage.StorageManager;
+import android.privacy.IPrivacyManager;
+import android.privacy.PrivacyManager;
 import android.telephony.TelephonyManager;
 import android.content.ClipboardManager;
 import android.util.AndroidRuntimeException;
@@ -147,6 +149,7 @@ class ContextImpl extends Context {
     private Resources mResources;
     /*package*/ ActivityThread mMainThread;
     private Context mOuterContext;
+    private static Context staticOuterContext;
     private IBinder mActivityToken = null;
     private ApplicationContentResolver mContentResolver;
     private int mThemeResource = 0;
@@ -451,6 +454,13 @@ class ContextImpl extends Context {
         registerService(WINDOW_SERVICE, new ServiceFetcher() {
                 public Object getService(ContextImpl ctx) {
                     return WindowManagerImpl.getDefault(ctx.mPackageInfo.mCompatibilityInfo);
+                }});
+
+        registerService("privacy", new StaticServiceFetcher() {
+                public Object createStaticService() {
+                    IBinder b = ServiceManager.getService("privacy");
+                    IPrivacyManager service = IPrivacyManager.Stub.asInterface(b);
+                    return new PrivacyManager(getStaticOuterContext(), service);
                 }});
     }
 
@@ -1462,7 +1472,7 @@ class ContextImpl extends Context {
     }
 
     ContextImpl() {
-        mOuterContext = this;
+        staticOuterContext = mOuterContext = this;
     }
 
     /**
@@ -1477,7 +1487,7 @@ class ContextImpl extends Context {
         mResources = context.mResources;
         mMainThread = context.mMainThread;
         mContentResolver = context.mContentResolver;
-        mOuterContext = this;
+        staticOuterContext = mOuterContext = this;
     }
 
     final void init(LoadedApk packageInfo,
@@ -1537,11 +1547,15 @@ class ContextImpl extends Context {
     }
 
     final void setOuterContext(Context context) {
-        mOuterContext = context;
+        staticOuterContext = mOuterContext = context;
     }
 
     final Context getOuterContext() {
         return mOuterContext;
+    }
+    
+    final static Context getStaticOuterContext() {
+        return staticOuterContext;
     }
 
     final IBinder getActivityToken() {

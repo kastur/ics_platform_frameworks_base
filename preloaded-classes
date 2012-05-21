@@ -647,6 +647,7 @@ android.os.storage.IMountService$Stub
 android.os.storage.IMountService$Stub$Proxy
 android.preference.PreferenceActivity
 android.preference.PreferenceManager
+android.privacy.PrivacyManager
 android.provider.BaseColumns
 android.provider.Settings$NameValueCache
 android.provider.Settings$NameValueTable

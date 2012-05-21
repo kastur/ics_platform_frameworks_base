@@ -187,6 +187,7 @@ LOCAL_SRC_FILES += \
 	media/java/android/media/IMediaScannerService.aidl \
 	media/java/android/media/IRemoteControlClient.aidl \
 	media/java/android/media/IRemoteControlDisplay.aidl \
+        privacy/java/android/privacy/IPrivacyManager.aidl \
 	telephony/java/com/android/internal/telephony/IPhoneStateListener.aidl \
 	telephony/java/com/android/internal/telephony/IPhoneSubInfo.aidl \
 	telephony/java/com/android/internal/telephony/ITelephony.aidl \

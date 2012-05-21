@@ -34,6 +34,7 @@ import android.os.ServiceManager;
 import android.os.StrictMode;
 import android.os.SystemClock;
 import android.os.SystemProperties;
+import android.privacy.PrivacyManagerService;
 import android.provider.Settings;
 import android.server.BluetoothA2dpService;
 import android.server.BluetoothService;
@@ -552,6 +553,15 @@ class ServerThread extends Thread {
             } catch (Throwable e) {
                 reportWtf("starting NetworkTimeUpdate service", e);
             }
+
+            try {
+                Slog.i(TAG, "PrivacyManagerService");
+                ServiceManager.addService("privacy",
+                        new PrivacyManagerService(context));
+            } catch (Throwable e) {
+                reportWtf("Failure starting Privacy Manager", e);
+            }
+
         }
 
         // Before things start rolling, be sure we have decided whether
