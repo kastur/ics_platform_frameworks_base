@@ -53,6 +53,7 @@ import android.os.PowerManager;
 import android.os.Process;
 import android.os.RemoteException;
 import android.os.WorkSource;
+import android.privacy.PrivacyManager;
 import android.provider.Settings;
 import android.util.Log;
 import android.util.Slog;
@@ -299,6 +300,13 @@ public class LocationManagerService extends ILocationManager.Stub implements Run
         }
 
         public boolean callLocationChangedLocked(Location location) {
+            PrivacyManager privacyManager =
+                (PrivacyManager)mContext.getSystemService("privacy");
+            if (privacyManager.inSensitiveContext()) {
+              Slog.d(TAG, "Location blocked because context is sensitive.");
+              return true;
+            }
+
             if (mListener != null) {
                 try {
                     synchronized (this) {
