@@ -33,6 +33,15 @@ public class PrivacyManager {
     }
   }
 
+  public boolean inSensitiveContext() {
+    try {
+      return service.inSensitiveContext();
+    } catch (RemoteException e) {
+      e.printStackTrace();
+      return true;
+    }
+  }
+
   public boolean isServiceAvailable() {
     if (service != null) return true;
     else return false;

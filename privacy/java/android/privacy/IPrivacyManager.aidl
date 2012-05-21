@@ -4,5 +4,6 @@ package android.privacy;
 interface IPrivacyManager {
   void enterSensitiveContext();
   void leaveSensitiveContext();
+  boolean inSensitiveContext();
 }
 
